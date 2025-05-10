@@ -42,6 +42,8 @@ func New(c config.Config) (*Logger, error) {
 		return nil, fmt.Errorf("'%s' log mode does not exists", c.LogMode)
 	}
 
+	// TODO: DEBUG LOG LOGGER START
+
 	return &Logger{
 		Log:     log,
 		LogFile: file,
@@ -66,4 +68,6 @@ func (l *Logger) Shutdown() {
 	if l.LogFile != nil {
 		l.LogFile.Close()
 	}
+
+	// TODO: DEBUG LOG LOGGER STOP
 }
