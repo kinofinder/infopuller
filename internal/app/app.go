@@ -27,7 +27,7 @@ func New() (*App, error) {
 		return nil, err
 	}
 
-	infopuller := infopuller.New(logger.Log, config)
+	infopuller := infopuller.New(logger.Logger, config)
 
 	return &App{
 		InfoPuller: infopuller,
