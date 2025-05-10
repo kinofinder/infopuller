@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"fmt"
 	"log/slog"
 	"os"
 
@@ -8,11 +9,13 @@ import (
 )
 
 type Logger struct {
-	Log *slog.Logger
+	Log     *slog.Logger
+	LogFile *os.File
 }
 
-func New(c config.Config) *Logger {
+func New(c config.Config) (*Logger, error) {
 	var log *slog.Logger
+	var file *os.File
 
 	switch c.LogMode {
 	case "local":
@@ -21,17 +24,28 @@ func New(c config.Config) *Logger {
 		}))
 
 	case "dev":
+		var err error
+
+		file, err = loadLogFile(c.LogDirectory, "log.json")
+		if err != nil {
+			return nil, err
+		}
+
 		log = slog.New(slog.NewJSONHandler(nil, &slog.HandlerOptions{
 			Level: slog.LevelDebug,
 		}))
 
 	case "prod":
 		// TODO: LOGGER FOR PROD
+
+	default:
+		return nil, fmt.Errorf("'%s' log mode does not exists", c.LogMode)
 	}
 
 	return &Logger{
-		Log: log,
-	}
+		Log:     log,
+		LogFile: file,
+	}, nil
 }
 
 func loadLogFile(dir string, name string) (*os.File, error) {
