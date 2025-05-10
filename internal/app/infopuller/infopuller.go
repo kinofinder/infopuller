@@ -1,13 +1,14 @@
 package infopuller
 
 import (
-	"infopuller/internal/utils/config"
 	"log/slog"
 	"net"
 
 	"google.golang.org/grpc"
 
 	infopullerpb "github.com/kinofinder/proto/gen/go/infopuller"
+
+	"infopuller/internal/utils/config"
 )
 
 type App struct {

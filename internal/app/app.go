@@ -2,12 +2,13 @@ package app
 
 import (
 	"fmt"
-	"infopuller/internal/app/infopuller"
-	"infopuller/internal/lib/logger"
-	"infopuller/internal/utils/config"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"infopuller/internal/app/infopuller"
+	"infopuller/internal/lib/logger"
+	"infopuller/internal/utils/config"
 )
 
 type App struct {
