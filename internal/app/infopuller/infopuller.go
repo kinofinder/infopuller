@@ -12,7 +12,7 @@ type App struct {
 func New() *App {
 	grpcs := grpc.NewServer()
 
-	infopullerpb.RegisterInfoPullerServer(grpcs, nil)
+	infopullerpb.RegisterInfoPullerServer(grpcs, Handlers{})
 
 	return &App{}
 }
@@ -20,3 +20,7 @@ func New() *App {
 func (a *App) Run() {}
 
 func (a *App) Shutdown() {}
+
+type Handlers struct {
+	infopullerpb.UnimplementedInfoPullerServer
+}
