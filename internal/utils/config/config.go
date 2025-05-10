@@ -9,5 +9,6 @@ type Config struct {
 }
 
 func New() Config {
+	// TODO: DEBUG LOG CONFIG LOAD
 	return Config{}
 }
