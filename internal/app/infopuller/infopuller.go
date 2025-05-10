@@ -12,7 +12,7 @@ type App struct {
 func New() *App {
 	grpcs := grpc.NewServer()
 
-	infopullerpb.RegisterInfoPullerServer(grpcs, Handlers{})
+	infopullerpb.RegisterInfoPullerServer(grpcs, &Handlers{})
 
 	return &App{}
 }
