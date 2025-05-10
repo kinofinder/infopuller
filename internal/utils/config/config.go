@@ -1,7 +1,8 @@
 package config
 
 type Config struct {
-	LogMode string
+	LogMode      string
+	LogDirectory string
 }
 
 func New() *Config {
