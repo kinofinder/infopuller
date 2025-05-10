@@ -13,10 +13,14 @@ type Config struct {
 }
 
 type ClientConfig struct {
-	Timeout time.Duration
+	KinopoiskAPIKey string
+	Timeout         time.Duration
+
+	RandomURL string
 }
 
 func New() Config {
 	// TODO: DEBUG LOG CONFIG LOAD
+
 	return Config{}
 }
