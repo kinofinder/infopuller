@@ -1,11 +1,19 @@
 package config
 
+import "time"
+
 type Config struct {
 	Network string
 	Address string
 
+	Client ClientConfig
+
 	LogMode      string
 	LogDirectory string
+}
+
+type ClientConfig struct {
+	Timeout time.Duration
 }
 
 func New() Config {
