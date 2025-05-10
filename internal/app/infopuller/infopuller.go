@@ -58,7 +58,9 @@ func (a *App) Shutdown() {
 	// TODO: DEBUG LOG SERVER STOP
 }
 
-type Servicer interface{}
+type Servicer interface {
+	Random() (*Info, error)
+}
 
 type Handlers struct {
 	infopullerpb.UnimplementedInfoPullerServer
@@ -78,6 +80,23 @@ type Service struct {
 	Log *slog.Logger
 }
 
-func (s *Service) Random() {}
+type Info struct {
+	Name        string              `json:"name"`
+	Year        int32               `json:"year"`
+	Description string              `json:"description"`
+	Rating      []float64           `json:"rating"`
+	Length      int32               `json:"movieLength"`
+	Poster      map[string]string   `json:"poster"`
+	Genres      []map[string]string `json:"genres"`
+	Countries   []map[string]string `json:"countries"`
+}
+
+func (s *Service) Random() (*Info, error) {
+	return &Info{}, nil
+}
 
 type UnimplementedService struct{}
+
+func (u *UnimplementedService) Random() (*Info, error) {
+	return &Info{}, nil
+}
