@@ -3,7 +3,7 @@ module infopuller
 go 1.24.3
 
 require (
-	github.com/kinofinder/proto v0.1.0
+	github.com/kinofinder/proto v0.1.1
 	google.golang.org/grpc v1.72.0
 )
 
