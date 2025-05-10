@@ -8,6 +8,6 @@ type Config struct {
 	LogDirectory string
 }
 
-func New() *Config {
-	return &Config{}
+func New() Config {
+	return Config{}
 }
