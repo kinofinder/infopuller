@@ -1,6 +1,7 @@
 package infopuller
 
 import (
+	"context"
 	"log/slog"
 	"net"
 
@@ -61,4 +62,8 @@ type Handlers struct {
 	infopullerpb.UnimplementedInfoPullerServer
 
 	Log *slog.Logger
+}
+
+func (h *Handlers) Random(ctx context.Context, req *infopullerpb.RandomRequest) (*infopullerpb.RandomResponse, error) {
+	return &infopullerpb.RandomResponse{}, nil
 }
