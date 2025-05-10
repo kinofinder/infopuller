@@ -33,3 +33,17 @@ func New(c config.Config) *Logger {
 		Log: log,
 	}
 }
+
+func loadLogFile(dir string, name string) (*os.File, error) {
+	err := os.MkdirAll(dir, 0666)
+	if err != nil {
+		return nil, err
+	}
+
+	file, err := os.Create(name)
+	if err != nil {
+		return nil, err
+	}
+
+	return file, nil
+}
