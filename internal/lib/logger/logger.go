@@ -61,3 +61,9 @@ func loadLogFile(dir string, name string) (*os.File, error) {
 
 	return file, nil
 }
+
+func (l *Logger) Shutdown() {
+	if l.LogFile != nil {
+		l.LogFile.Close()
+	}
+}
