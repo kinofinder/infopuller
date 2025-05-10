@@ -40,6 +40,8 @@ func (a *App) Run() error {
 		return err
 	}
 
+	// TODO: DEBUG LOG SERVER START
+
 	err = a.Server.Serve(l)
 	if err != nil {
 		return err
@@ -50,6 +52,8 @@ func (a *App) Run() error {
 
 func (a *App) Shutdown() {
 	a.Server.GracefulStop()
+
+	// TODO: DEBUG LOG SERVER STOP
 }
 
 type Handlers struct {
