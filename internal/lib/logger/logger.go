@@ -9,7 +9,8 @@ import (
 )
 
 type Logger struct {
-	Log     *slog.Logger
+	*slog.Logger
+
 	LogFile *os.File
 }
 
@@ -45,7 +46,8 @@ func New(c config.Config) (*Logger, error) {
 	// TODO: DEBUG LOG LOGGER START
 
 	return &Logger{
-		Log:     log,
+		Logger: log,
+
 		LogFile: file,
 	}, nil
 }
