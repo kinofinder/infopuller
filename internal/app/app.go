@@ -7,12 +7,14 @@ import (
 	"syscall"
 
 	"infopuller/internal/app/infopuller"
+	"infopuller/internal/client"
 	"infopuller/internal/lib/logger"
 	"infopuller/internal/utils/config"
 )
 
 type App struct {
 	InfoPuller *infopuller.App
+	Client     *client.Client
 
 	Logger *logger.Logger
 
@@ -29,8 +31,11 @@ func New() (*App, error) {
 
 	infopuller := infopuller.New(logger.Logger, config)
 
+	client := client.New(logger.Logger, config)
+
 	return &App{
 		InfoPuller: infopuller,
+		Client:     client,
 
 		Logger: logger,
 
@@ -69,6 +74,7 @@ func (a *App) Run() {
 }
 
 func (a *App) shutdown() {
+	a.Client.Shutdown()
 	a.InfoPuller.Shutdown()
 	a.Logger.Shutdown()
 }
