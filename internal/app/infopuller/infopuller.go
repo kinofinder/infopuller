@@ -21,7 +21,9 @@ type App struct {
 func New(log *slog.Logger, config config.Config) *App {
 	grpcs := grpc.NewServer()
 
-	infopullerpb.RegisterInfoPullerServer(grpcs, &Handlers{})
+	infopullerpb.RegisterInfoPullerServer(grpcs, &Handlers{
+		Log: log,
+	})
 
 	return &App{
 		Server: grpcs,
