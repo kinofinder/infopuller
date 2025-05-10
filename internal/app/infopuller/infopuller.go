@@ -58,8 +58,12 @@ func (a *App) Shutdown() {
 	// TODO: DEBUG LOG SERVER STOP
 }
 
+type Servicer interface{}
+
 type Handlers struct {
 	infopullerpb.UnimplementedInfoPullerServer
+
+	Service Servicer
 
 	Log *slog.Logger
 }
@@ -67,3 +71,13 @@ type Handlers struct {
 func (h *Handlers) Random(ctx context.Context, req *infopullerpb.RandomRequest) (*infopullerpb.RandomResponse, error) {
 	return &infopullerpb.RandomResponse{}, nil
 }
+
+type Service struct {
+	UnimplementedService
+
+	Log *slog.Logger
+}
+
+func (s *Service) Random() {}
+
+type UnimplementedService struct{}
