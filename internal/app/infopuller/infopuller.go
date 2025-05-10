@@ -46,7 +46,9 @@ func (a *App) Run() error {
 	return nil
 }
 
-func (a *App) Shutdown() {}
+func (a *App) Shutdown() {
+	a.Server.GracefulStop()
+}
 
 type Handlers struct {
 	infopullerpb.UnimplementedInfoPullerServer
