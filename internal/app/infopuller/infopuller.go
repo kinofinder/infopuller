@@ -120,10 +120,15 @@ type Handlers struct {
 func (h *Handlers) Random(ctx context.Context, req *infopullerpb.RandomRequest) (*infopullerpb.RandomResponse, error) {
 	const op = "grpc.Random()"
 
+	h.Log.Debug(
+		"request received by server random handler",
+		slog.String("op", op),
+	)
+
 	info, err := h.Service.Random()
 	if err != nil {
 		h.Log.Error(
-			"failure in random method",
+			"failure in service random method",
 			slog.String("op", op),
 			slog.Any("err", err),
 		)
@@ -189,6 +194,13 @@ type Info struct {
 }
 
 func (s *Service) Random() (*Info, error) {
+	const op = "service.Random()"
+
+	s.Log.Debug(
+		"request received by service random handler",
+		slog.String("op", op),
+	)
+
 	data, err := s.Client.Random()
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", ErrClientFailed, err)
