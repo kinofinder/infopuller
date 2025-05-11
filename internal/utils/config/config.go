@@ -36,7 +36,7 @@ func New() (*Config, error) {
 	return &config, nil
 }
 
-func UpdateConfig() error {
+func Update() error {
 	err := godotenv.Load()
 	if err != nil {
 		return err
