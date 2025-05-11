@@ -3,6 +3,7 @@ package infopuller
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log/slog"
 	"net"
 
@@ -16,7 +17,12 @@ import (
 	"infopuller/internal/utils/config"
 )
 
-// TODO: FIGURE OUT BETTER ERRORS
+var (
+	ErrInternal = status.Error(codes.Internal, "internal error")
+
+	ErrClientFailed = fmt.Errorf("client failed")
+	ErrUnmarshaling = fmt.Errorf("unmarshaling failed")
+)
 
 type App struct {
 	Server *grpc.Server
@@ -87,12 +93,40 @@ func (h *Handlers) Random(ctx context.Context, req *infopullerpb.RandomRequest) 
 	if err != nil {
 		// TODO: LOG ERROR
 
-		return nil, status.Error(codes.Internal, "internal error")
+		return nil, ErrInternal
 	}
 
-	// TODO: PROCCESS INFO DATA FOR RESPONSE
+	return buildResponse(info), nil
+}
 
-	return &infopullerpb.RandomResponse{}, nil
+func buildResponse(info *Info) *infopullerpb.RandomResponse {
+	var genres []*infopullerpb.Genre
+
+	for _, val := range info.Genres {
+		genre, ok := val["name"]
+		if ok {
+			genres = append(genres, &infopullerpb.Genre{Name: genre})
+		}
+	}
+
+	var countries []*infopullerpb.Country
+
+	for _, val := range info.Countries {
+		country, ok := val["name"]
+		if ok {
+			countries = append(countries, &infopullerpb.Country{Name: country})
+		}
+	}
+
+	return &infopullerpb.RandomResponse{
+		Name:        info.Name,
+		Year:        info.Year,
+		Description: info.Description,
+		Length:      info.Length,
+		Poster:      info.Poster["url"],
+		Genres:      genres,
+		Countries:   countries,
+	}
 }
 
 type Service struct {
@@ -117,18 +151,14 @@ type Info struct {
 func (s *Service) Random() (*Info, error) {
 	data, err := s.Client.Random()
 	if err != nil {
-		// TODO: LOG ERROR
-
-		return nil, err
+		return nil, fmt.Errorf("%w: %v", ErrClientFailed, err)
 	}
 
 	var info *Info
 
 	err = json.Unmarshal(data, &info)
 	if err != nil {
-		// TODO: LOG ERROR
-
-		return nil, err
+		return nil, fmt.Errorf("%w: %v", ErrUnmarshaling, err)
 	}
 
 	return info, nil
