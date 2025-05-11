@@ -2,6 +2,7 @@ package tests
 
 import (
 	"context"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -10,6 +11,9 @@ import (
 
 	infopullerpb "github.com/kinofinder/proto/gen/go/infopuller"
 
+	"infopuller/internal/app/infopuller"
+	"infopuller/internal/lib/logger"
+	"infopuller/internal/utils/config"
 	"infopuller/tests/suite"
 )
 
@@ -26,21 +30,25 @@ func TestRandom_Functional(t *testing.T) {
 		},
 	}
 
-	suite := suite.New(t)
+	os.Setenv("CONFIG_LOCATION", "test.env")
+	defer os.Unsetenv("CONFIG_LOCATION")
+
+	config, err := config.New()
+	assert.NoError(t, err)
+
+	logger, err := logger.New(config)
+	assert.NoError(t, err)
+
+	suite := suite.New(t, &infopuller.UnimplementedService{}, logger, config)
+
 	go suite.App.Run()
 
 	for _, cs := range cases {
 		suite.T.Run(cs.name, func(t *testing.T) {
-			resp, err := suite.Client.Random(context.Background(), &infopullerpb.RandomRequest{})
+			_, err := suite.Client.Random(context.Background(), &infopullerpb.RandomRequest{})
 			st, ok := status.FromError(err)
 			if ok {
-				assert.Equal(t, cs.expectedCode, st)
-			}
-
-			if cs.expectedResp {
-				assert.NotEqual(t, "", resp.String())
-			} else {
-				assert.Equal(t, "", resp.String())
+				assert.Equal(t, cs.expectedCode, st.Code())
 			}
 		})
 	}

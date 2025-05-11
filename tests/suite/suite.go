@@ -1,7 +1,6 @@
 package suite
 
 import (
-	"os"
 	"testing"
 
 	"google.golang.org/grpc"
@@ -11,7 +10,6 @@ import (
 
 	"infopuller/internal/app"
 	"infopuller/internal/app/infopuller"
-	"infopuller/internal/client"
 	"infopuller/internal/lib/logger"
 	"infopuller/internal/utils/config"
 )
@@ -23,35 +21,37 @@ type Suite struct {
 	Client infopullerpb.InfoPullerClient
 }
 
-func New(t *testing.T) *Suite {
+func New(t *testing.T, service infopuller.Servicer, log *logger.Logger, c *config.Config) *Suite {
 	t.Helper()
 	t.Parallel()
 
-	os.Setenv("CONFIG_LOCATION", "test.env")
-	defer os.Unsetenv("CONFIG_LOCATION")
+	grpcServer := grpc.NewServer()
 
-	config, err := config.New()
-	if err != nil {
-		panic(err)
+	infopullerpb.RegisterInfoPullerServer(grpcServer, &infopuller.Handlers{
+		Service: service,
+
+		Log: log.Logger,
+
+		Config: c,
+	})
+
+	infopuller := &infopuller.App{
+		Server: grpcServer,
+
+		Log: log.Logger,
+
+		Config: c,
 	}
-
-	logger, err := logger.New(config)
-	if err != nil {
-		panic(err)
-	}
-
-	client := client.New(logger.Logger, config)
 
 	app := &app.App{
-		InfoPuller: infopuller.New(logger.Logger, client, config),
-		Client:     client,
+		InfoPuller: infopuller,
 
-		Logger: logger,
+		Logger: log,
 
-		Config: config,
+		Config: c,
 	}
 
-	conn, err := grpc.NewClient(config.ServerAddress, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient(c.ServerAddress, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		panic(err)
 	}
@@ -59,9 +59,7 @@ func New(t *testing.T) *Suite {
 	grpcClient := infopullerpb.NewInfoPullerClient(conn)
 
 	t.Cleanup(func() {
-		app.Client.Shutdown()
 		app.InfoPuller.Shutdown()
-		app.Logger.Shutdown()
 	})
 
 	return &Suite{
