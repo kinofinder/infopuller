@@ -5,7 +5,7 @@ go 1.24.3
 require (
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/joho/godotenv v1.5.1
-	github.com/kinofinder/proto v0.1.3
+	github.com/kinofinder/proto v0.1.4
 	google.golang.org/grpc v1.72.0
 )
 
