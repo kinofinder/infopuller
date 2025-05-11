@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
@@ -52,12 +53,18 @@ func New() (*App, error) {
 }
 
 func (a *App) Run() {
+	const op = "app.Run()"
+
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 
 	errChan := make(chan error, 1)
 
-	// TODO: DEBUG LOG APP START
+	a.Logger.Info(
+		"starting an app",
+		slog.String("op", op),
+		slog.Any("c", a.Config),
+	)
 
 	go func() {
 		err := a.InfoPuller.Run()
@@ -67,18 +74,27 @@ func (a *App) Run() {
 	}()
 
 	select {
-	case <-sigChan:
-		// TODO: INFO LOG SIGNAL HERE
+	case sig := <-sigChan:
+		a.Logger.Info(
+			"received a signal to shutdown",
+			slog.String("op", op),
+			slog.Any("sig", sig),
+		)
 
 	case err := <-errChan:
-		// TODO: LOG ERROR HERE
-
-		fmt.Println(err) // TEMP SOLUTION
+		a.Logger.Error(
+			"fatal error happened while running",
+			slog.String("op", op),
+			slog.Any("err", err),
+		)
 	}
 
-	a.shutdown()
+	a.Logger.Info(
+		"shutting down the app",
+		slog.String("op", op),
+	)
 
-	// TODO: DEBUG LOG APP STOP
+	a.shutdown()
 }
 
 func (a *App) shutdown() {
