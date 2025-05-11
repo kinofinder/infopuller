@@ -35,7 +35,7 @@ func New(log *slog.Logger, c config.Config) *Client {
 	)
 
 	client := http.Client{
-		Timeout: c.Client.Timeout,
+		Timeout: c.ClientTimeout,
 	}
 
 	return &Client{
@@ -66,12 +66,12 @@ func (c *Client) Random() ([]byte, error) {
 		slog.String("op", op),
 	)
 
-	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, c.Config.Client.RandomURL, nil)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, c.Config.ClientRandomURL, nil)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", ErrNewRequest, err)
 	}
 
-	req = addHeaders(req, c.Config.Client.KinopoiskAPIKey)
+	req = addHeaders(req, c.Config.KinopoiskAPIKey)
 
 	resp, err := c.Do(req)
 	if err != nil {
