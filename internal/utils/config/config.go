@@ -10,20 +10,16 @@ import (
 )
 
 type Config struct {
-	Network string `yaml:"network" env-default:"tcp"`
-	Address string `yaml:"address" env-default:"0.0.0.0:5430"`
+	KinopoiskAPIKey string `env:"KINOPOISK_API_KEY" env-required:"true" env-upd:"true"`
 
-	Client ClientConfig `yaml:"client"`
+	ServerNetwork string `env:"SERVER_NETWORK" env-default:"tcp"`
+	ServerAddress string `env:"SERVER_ADDRESS" env-default:"0.0.0.0:5430"`
 
-	LogMode      string `yaml:"log_mode" env-default:"local"`
-	LogDirectory string `yaml:"log_directory" env-default:"log"`
-}
+	ClientTimeout   time.Duration `env:"CLIENT_TIMEOUT" env-default:"10s" env-upd:"true"`
+	ClientRandomURL string        `env:"CLIENT_RANDOM_URL" env-required:"true" env-upd:"true"`
 
-type ClientConfig struct {
-	KinopoiskAPIKey string
-	Timeout         time.Duration `yaml:"timeout" env-default:"10s" env-upd:"true"`
-
-	RandomURL string `yaml:"random_url" env-required:"true" env-upd:"true"`
+	LogMode      string `env:"LOG_MODE" env-default:"local"`
+	LogDirectory string `env:"LOG_DIRECTORY" env-default:"log"`
 }
 
 func New() (Config, error) {
