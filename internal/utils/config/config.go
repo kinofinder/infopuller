@@ -31,7 +31,7 @@ func New() (*Config, error) {
 		loc = ".env"
 	}
 
-	err := godotenv.Load()
+	err := godotenv.Load(loc)
 	if err != nil {
 		return &Config{}, err
 	}

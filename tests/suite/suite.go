@@ -27,7 +27,7 @@ func New(t *testing.T) *Suite {
 	t.Helper()
 	t.Parallel()
 
-	os.Setenv("CONFIG_LOCATION", "tests/test.env")
+	os.Setenv("CONFIG_LOCATION", "test.env")
 	defer os.Unsetenv("CONFIG_LOCATION")
 
 	config, err := config.New()
