@@ -10,6 +10,12 @@ import (
 	"infopuller/internal/utils/config"
 )
 
+var (
+	ErrNewRequest = fmt.Errorf("failed to build a request")
+	ErrDo         = fmt.Errorf("request failed")
+	ErrReadAll    = fmt.Errorf("failed to read a body")
+)
+
 // TODO: FIGURE OUT BETTER ERRORS
 
 type Client struct {
@@ -41,11 +47,13 @@ func (c *Client) Shutdown() {
 }
 
 func (c *Client) Random() ([]byte, error) {
+	// TODO: DEBUG LOG HITTING CLIENT HANDLER
+
 	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, c.Config.Client.RandomURL, nil)
 	if err != nil {
 		// TODO: LOG ERROR
 
-		return nil, err
+		return nil, fmt.Errorf("%w: %v", ErrNewRequest, err)
 	}
 
 	req = addHeaders(req, c.Config.Client.KinopoiskAPIKey)
@@ -54,18 +62,20 @@ func (c *Client) Random() ([]byte, error) {
 	if err != nil {
 		// TODO: LOG ERROR
 
-		return nil, err
+		return nil, fmt.Errorf("%w: %v", ErrDo, err)
 	}
 
 	if resp.StatusCode != http.StatusOK {
 		// TODO: LOG ERROR
 
-		return nil, fmt.Errorf("request failed: %v", resp.StatusCode)
+		return nil, fmt.Errorf("%w: %v", ErrDo, resp.Status)
 	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		// TODO: LOG ERROR
+
+		return nil, fmt.Errorf("%w: %v", ErrReadAll, err)
 	}
 
 	return body, nil
