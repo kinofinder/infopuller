@@ -27,11 +27,16 @@ type Client struct {
 }
 
 func New(log *slog.Logger, c config.Config) *Client {
+	const op = "client.New()"
+
+	log.Debug(
+		"initiallizing client",
+		slog.String("op", op),
+	)
+
 	client := http.Client{
 		Timeout: c.Client.Timeout,
 	}
-
-	// TODO: DEBUG LOG CLIENT START
 
 	return &Client{
 		Client: client,
@@ -43,11 +48,23 @@ func New(log *slog.Logger, c config.Config) *Client {
 }
 
 func (c *Client) Shutdown() {
+	const op = "client.Shutdown()"
+
+	c.Log.Debug(
+		"stopping the client",
+		slog.String("op", op),
+	)
+
 	c.CloseIdleConnections()
 }
 
 func (c *Client) Random() ([]byte, error) {
-	// TODO: DEBUG LOG HITTING CLIENT HANDLER
+	const op = "client.Random()"
+
+	c.Log.Debug(
+		"request received by client random handler",
+		slog.String("op", op),
+	)
 
 	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, c.Config.Client.RandomURL, nil)
 	if err != nil {
