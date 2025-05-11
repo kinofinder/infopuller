@@ -26,7 +26,7 @@ func New(c config.Config) (*Logger, error) {
 	case "dev":
 		var err error
 
-		file, err = loadLogFile(c.LogDirectory, "log.json")
+		file, err = loadLogFile(c.LogDirectory, "infopuller.log.json")
 		if err != nil {
 			return nil, err
 		}
