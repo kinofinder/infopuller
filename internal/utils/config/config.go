@@ -1,6 +1,7 @@
 package config
 
 import (
+	"os"
 	"time"
 
 	"github.com/ilyakaznacheev/cleanenv"
@@ -23,7 +24,7 @@ type Config struct {
 var config Config
 
 func New() (*Config, error) {
-	err := godotenv.Load()
+	err := godotenv.Load(os.Getenv("CONFIG"))
 	if err != nil {
 		return &Config{}, err
 	}
