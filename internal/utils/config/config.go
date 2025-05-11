@@ -53,5 +53,5 @@ func New() (Config, error) {
 
 	config.Client.KinopoiskAPIKey = apiKey
 
-	return Config{}, nil
+	return config, nil
 }
