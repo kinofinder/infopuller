@@ -17,6 +17,8 @@ var (
 )
 
 type Client struct {
+	UnimplementedClient
+
 	http.Client
 
 	Log *slog.Logger
@@ -76,4 +78,10 @@ func addHeaders(req *http.Request, key string) *http.Request {
 	req.Header.Add("X-API-KEY", key)
 
 	return req
+}
+
+type UnimplementedClient struct{}
+
+func (u *UnimplementedClient) Random() ([]byte, error) {
+	return nil, nil
 }
