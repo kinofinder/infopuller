@@ -14,6 +14,7 @@ import (
 
 var (
 	ErrLoggerInitialization = fmt.Errorf("logger failed to initialize")
+	ErrConfigLoading        = fmt.Errorf("failed to load config")
 )
 
 type App struct {
@@ -26,11 +27,14 @@ type App struct {
 }
 
 func New() (*App, error) {
-	config := config.New()
+	config, err := config.New()
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", ErrLoggerInitialization, err)
+	}
 
 	logger, err := logger.New(config)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrLoggerInitialization, err)
+		return nil, fmt.Errorf("%w: %v", ErrConfigLoading, err)
 	}
 
 	client := client.New(logger.Logger, config)
