@@ -24,7 +24,14 @@ type Config struct {
 var config Config
 
 func New() (*Config, error) {
-	err := godotenv.Load(os.Getenv("CONFIG"))
+	var loc string
+
+	loc = os.Getenv("CONFIG_LOCATION")
+	if loc == "" {
+		loc = ".env"
+	}
+
+	err := godotenv.Load()
 	if err != nil {
 		return &Config{}, err
 	}
