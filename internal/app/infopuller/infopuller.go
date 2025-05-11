@@ -26,7 +26,7 @@ type App struct {
 	Config config.Config
 }
 
-func New(log *slog.Logger, client client.Client, c config.Config) *App {
+func New(log *slog.Logger, client *client.Client, c config.Config) *App {
 	grpcs := grpc.NewServer()
 
 	infopullerpb.RegisterInfoPullerServer(grpcs, &Handlers{
@@ -98,7 +98,7 @@ func (h *Handlers) Random(ctx context.Context, req *infopullerpb.RandomRequest) 
 type Service struct {
 	UnimplementedService
 
-	Client client.Client
+	Client *client.Client
 
 	Log *slog.Logger
 }
