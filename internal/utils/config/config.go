@@ -23,7 +23,7 @@ type ClientConfig struct {
 	KinopoiskAPIKey string
 	Timeout         time.Duration `yaml:"timeout" env-default:"10s" env-upd:"true"`
 
-	RandomURL string `yaml:"random_url" env-default:"https://api.kinopoisk.dev/v1.4/movie/random" env-upd:"true"`
+	RandomURL string `yaml:"random_url" env-required:"true" env-upd:"true"`
 }
 
 func New() (Config, error) {
