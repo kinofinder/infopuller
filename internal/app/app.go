@@ -28,6 +28,8 @@ type App struct {
 }
 
 func New() (*App, error) {
+	const op = "app.New()"
+
 	config, err := config.New()
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", ErrLoggerInitialization, err)
@@ -37,6 +39,11 @@ func New() (*App, error) {
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", ErrConfigLoading, err)
 	}
+
+	logger.Info(
+		"intitializing app components",
+		slog.String("op", op),
+	)
 
 	client := client.New(logger.Logger, config)
 
