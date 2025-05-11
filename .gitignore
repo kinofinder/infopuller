@@ -4,5 +4,5 @@
 
 # FILES #######
 
-*.env
+.env
 *.log.json
