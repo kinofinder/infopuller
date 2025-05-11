@@ -3,10 +3,11 @@ package client
 import (
 	"context"
 	"fmt"
-	"infopuller/internal/utils/config"
 	"io"
 	"log/slog"
 	"net/http"
+
+	"infopuller/internal/utils/config"
 )
 
 // TODO: FIGURE OUT BETTER ERRORS
