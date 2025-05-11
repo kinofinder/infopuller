@@ -16,8 +16,6 @@ var (
 	ErrReadAll    = fmt.Errorf("failed to read a body")
 )
 
-// TODO: FIGURE OUT BETTER ERRORS
-
 type Client struct {
 	http.Client
 
