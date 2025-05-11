@@ -6,6 +6,11 @@ type Suite struct {
 	*testing.T
 }
 
-func New() *Suite {
-	return &Suite{}
+func New(t *testing.T) *Suite {
+	t.Helper()
+	t.Parallel()
+
+	return &Suite{
+		T: t,
+	}
 }
