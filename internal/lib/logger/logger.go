@@ -1,7 +1,6 @@
 package logger
 
 import (
-	"fmt"
 	"log/slog"
 	"os"
 
@@ -40,7 +39,7 @@ func New(c config.Config) (*Logger, error) {
 		// TODO: LOGGER FOR PROD
 
 	default:
-		return nil, fmt.Errorf("'%s' log mode does not exists", c.LogMode)
+		log = slog.New(slog.DiscardHandler)
 	}
 
 	// TODO: DEBUG LOG LOGGER START
