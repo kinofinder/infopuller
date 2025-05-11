@@ -13,7 +13,7 @@ type Logger struct {
 	LogFile *os.File
 }
 
-func New(c config.Config) (*Logger, error) {
+func New(c *config.Config) (*Logger, error) {
 	var log *slog.Logger
 	var file *os.File
 

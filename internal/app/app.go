@@ -24,7 +24,7 @@ type App struct {
 
 	Logger *logger.Logger
 
-	Config config.Config
+	Config *config.Config
 }
 
 func New() (*App, error) {

@@ -29,10 +29,10 @@ type App struct {
 
 	Log *slog.Logger
 
-	Config config.Config
+	Config *config.Config
 }
 
-func New(log *slog.Logger, client *client.Client, c config.Config) *App {
+func New(log *slog.Logger, client *client.Client, c *config.Config) *App {
 	const op = "infopuller.New()"
 
 	log.Debug(
@@ -47,9 +47,13 @@ func New(log *slog.Logger, client *client.Client, c config.Config) *App {
 			Client: client,
 
 			Log: log,
+
+			Config: c,
 		},
 
 		Log: log,
+
+		Config: c,
 	})
 
 	return &App{
@@ -115,6 +119,8 @@ type Handlers struct {
 	Service Servicer
 
 	Log *slog.Logger
+
+	Config *config.Config
 }
 
 func (h *Handlers) Random(ctx context.Context, req *infopullerpb.RandomRequest) (*infopullerpb.RandomResponse, error) {
@@ -180,6 +186,8 @@ type Service struct {
 	Client Clienter
 
 	Log *slog.Logger
+
+	Config *config.Config
 }
 
 type Info struct {

@@ -23,10 +23,10 @@ type Client struct {
 
 	Log *slog.Logger
 
-	Config config.Config
+	Config *config.Config
 }
 
-func New(log *slog.Logger, c config.Config) *Client {
+func New(log *slog.Logger, c *config.Config) *Client {
 	const op = "client.New()"
 
 	log.Debug(
