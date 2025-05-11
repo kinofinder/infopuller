@@ -18,7 +18,7 @@ import (
 )
 
 var (
-	ErrInternal = status.Error(codes.Internal, "internal error")
+	ErrInternal = status.Error(codes.Internal, "failed while invoking a method")
 
 	ErrClientFailed = fmt.Errorf("client failed")
 	ErrUnmarshaling = fmt.Errorf("unmarshaling failed")
@@ -120,6 +120,7 @@ func buildResponse(info *Info) *infopullerpb.RandomResponse {
 
 	return &infopullerpb.RandomResponse{
 		Name:        info.Name,
+		Type:        info.Type,
 		Year:        info.Year,
 		Description: info.Description,
 		Length:      info.Length,
@@ -143,9 +144,9 @@ type Service struct {
 
 type Info struct {
 	Name        string              `json:"name"`
+	Type        string              `json:"type"`
 	Year        int32               `json:"year"`
 	Description string              `json:"description"`
-	Rating      []float64           `json:"rating"`
 	Length      int32               `json:"movieLength"`
 	Poster      map[string]string   `json:"poster"`
 	Genres      []map[string]string `json:"genres"`
