@@ -20,18 +20,31 @@ type Config struct {
 	LogDirectory string `env:"LOG_DIRECTORY" env-default:"log"`
 }
 
-func New() (Config, error) {
+var config Config
+
+func New() (*Config, error) {
 	err := godotenv.Load()
 	if err != nil {
-		return Config{}, err
+		return &Config{}, err
 	}
-
-	var config Config
 
 	err = cleanenv.ReadEnv(&config)
 	if err != nil {
-		return Config{}, err
+		return &Config{}, err
 	}
 
-	return config, nil
+	return &config, nil
+}
+
+func UpdateConfig() error {
+	err := godotenv.Load()
+	if err != nil {
+		return err
+	}
+
+	err = cleanenv.UpdateEnv(&config)
+	if err != nil {
+		return err
+	}
+	return nil
 }
