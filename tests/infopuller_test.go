@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
@@ -42,6 +43,8 @@ func TestRandom_Functional(t *testing.T) {
 	suite := suite.New(t, &infopuller.UnimplementedService{}, logger, config)
 
 	go suite.App.Run()
+
+	time.Sleep(time.Second * 2)
 
 	for _, cs := range cases {
 		suite.T.Run(cs.name, func(t *testing.T) {
