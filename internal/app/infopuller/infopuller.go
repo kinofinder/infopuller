@@ -129,10 +129,14 @@ func buildResponse(info *Info) *infopullerpb.RandomResponse {
 	}
 }
 
+type Clienter interface {
+	Random() ([]byte, error)
+}
+
 type Service struct {
 	UnimplementedService
 
-	Client *client.Client
+	Client Clienter
 
 	Log *slog.Logger
 }
