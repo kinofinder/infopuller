@@ -66,13 +66,6 @@ func loadLogFile(dir string, name string) (*os.File, error) {
 }
 
 func (l *Logger) Shutdown() {
-	const op = "logger.Shutdown()"
-
-	l.Debug(
-		"stopping the logger",
-		slog.String("op", op),
-	)
-
 	if l.LogFile != nil {
 		l.LogFile.Close()
 	}
