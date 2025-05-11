@@ -1,8 +1,6 @@
 package config
 
 import (
-	"fmt"
-	"os"
 	"time"
 
 	"github.com/ilyakaznacheev/cleanenv"
@@ -28,24 +26,12 @@ func New() (Config, error) {
 		return Config{}, err
 	}
 
-	configPath := os.Getenv("CONFIG_PATH")
-	if configPath == "" {
-		return Config{}, fmt.Errorf("config path not specified")
-	}
-
-	apiKey := os.Getenv("KINOPOISK_API_KEY")
-	if apiKey == "" {
-		return Config{}, fmt.Errorf("api key not specified")
-	}
-
 	var config Config
 
-	err = cleanenv.ReadConfig(configPath, &config)
+	err = cleanenv.ReadEnv(&config)
 	if err != nil {
 		return Config{}, err
 	}
-
-	config.Client.KinopoiskAPIKey = apiKey
 
 	return config, nil
 }
