@@ -69,7 +69,7 @@ func (a *App) Run() error {
 		slog.String("op", op),
 	)
 
-	l, err := net.Listen(a.Config.Network, a.Config.Address)
+	l, err := net.Listen(a.Config.ServerNetwork, a.Config.ServerAddress)
 	if err != nil {
 		a.Log.Debug(
 			"failed to listen",
