@@ -42,8 +42,6 @@ func New(c config.Config) (*Logger, error) {
 		log = slog.New(slog.DiscardHandler)
 	}
 
-	// TODO: DEBUG LOG LOGGER START
-
 	return &Logger{
 		Logger: log,
 
