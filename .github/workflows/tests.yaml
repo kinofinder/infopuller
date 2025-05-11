@@ -18,4 +18,4 @@ jobs:
         run: go mod tidy
       - name: Run
         run: |
-          go test -v --run _Functional ./internal/tests
+          go test -v --run _Functional ./tests
