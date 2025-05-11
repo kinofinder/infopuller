@@ -1,6 +1,7 @@
 package suite
 
 import (
+	"os"
 	"testing"
 
 	"google.golang.org/grpc"
@@ -25,6 +26,9 @@ type Suite struct {
 func New(t *testing.T) *Suite {
 	t.Helper()
 	t.Parallel()
+
+	os.Setenv("CONFIG_LOCATION", "tests/test.env")
+	defer os.Unsetenv("CONFIG_LOCATION")
 
 	config, err := config.New()
 	if err != nil {
