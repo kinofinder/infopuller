@@ -12,6 +12,10 @@ import (
 	"infopuller/internal/utils/config"
 )
 
+var (
+	ErrLoggerInitialization = fmt.Errorf("logger failed to initialize")
+)
+
 type App struct {
 	InfoPuller *infopuller.App
 	Client     *client.Client
@@ -26,7 +30,7 @@ func New() (*App, error) {
 
 	logger, err := logger.New(config)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %v", ErrLoggerInitialization, err)
 	}
 
 	client := client.New(logger.Logger, config)
