@@ -49,8 +49,6 @@ func (c *Client) Random() ([]byte, error) {
 
 	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, c.Config.Client.RandomURL, nil)
 	if err != nil {
-		// TODO: LOG ERROR
-
 		return nil, fmt.Errorf("%w: %v", ErrNewRequest, err)
 	}
 
@@ -58,21 +56,15 @@ func (c *Client) Random() ([]byte, error) {
 
 	resp, err := c.Do(req)
 	if err != nil {
-		// TODO: LOG ERROR
-
 		return nil, fmt.Errorf("%w: %v", ErrDo, err)
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		// TODO: LOG ERROR
-
 		return nil, fmt.Errorf("%w: %v", ErrDo, resp.Status)
 	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		// TODO: LOG ERROR
-
 		return nil, fmt.Errorf("%w: %v", ErrReadAll, err)
 	}
 
