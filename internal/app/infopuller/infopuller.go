@@ -2,15 +2,21 @@ package infopuller
 
 import (
 	"context"
+	"encoding/json"
 	"log/slog"
 	"net"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	infopullerpb "github.com/kinofinder/proto/gen/go/infopuller"
 
+	"infopuller/internal/client"
 	"infopuller/internal/utils/config"
 )
+
+// TODO: FIGURE OUT BETTER ERRORS
 
 type App struct {
 	Server *grpc.Server
@@ -20,10 +26,16 @@ type App struct {
 	Config config.Config
 }
 
-func New(log *slog.Logger, config config.Config) *App {
+func New(log *slog.Logger, client client.Client, c config.Config) *App {
 	grpcs := grpc.NewServer()
 
 	infopullerpb.RegisterInfoPullerServer(grpcs, &Handlers{
+		Service: &Service{
+			Client: client,
+
+			Log: log,
+		},
+
 		Log: log,
 	})
 
@@ -32,7 +44,7 @@ func New(log *slog.Logger, config config.Config) *App {
 
 		Log: log,
 
-		Config: config,
+		Config: c,
 	}
 }
 
@@ -71,11 +83,22 @@ type Handlers struct {
 }
 
 func (h *Handlers) Random(ctx context.Context, req *infopullerpb.RandomRequest) (*infopullerpb.RandomResponse, error) {
+	info, err := h.Service.Random()
+	if err != nil {
+		// TODO: LOG ERROR
+
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+
+	// TODO: PROCCESS INFO DATA FOR RESPONSE
+
 	return &infopullerpb.RandomResponse{}, nil
 }
 
 type Service struct {
 	UnimplementedService
+
+	Client client.Client
 
 	Log *slog.Logger
 }
@@ -92,7 +115,23 @@ type Info struct {
 }
 
 func (s *Service) Random() (*Info, error) {
-	return &Info{}, nil
+	data, err := s.Client.Random()
+	if err != nil {
+		// TODO: LOG ERROR
+
+		return nil, err
+	}
+
+	var info *Info
+
+	err = json.Unmarshal(data, &info)
+	if err != nil {
+		// TODO: LOG ERROR
+
+		return nil, err
+	}
+
+	return info, nil
 }
 
 type UnimplementedService struct{}
