@@ -3,9 +3,9 @@ address: "0.0.0.0:5430"
 
 client:
   # kinopoisk_api_key located .env
-  - timeout: 10s
+  timeout: 10s
 
-  - random_url: "https://api.kinopoisk.dev/v1.4/movie/random"
+  random_url: "https://api.kinopoisk.dev/v1.4/movie/random"
 
 log_mode: "local"
 log_directory: "log"
