@@ -33,6 +33,13 @@ type App struct {
 }
 
 func New(log *slog.Logger, client *client.Client, c config.Config) *App {
+	const op = "infopuller.New()"
+
+	log.Debug(
+		"initiallizing infopuller",
+		slog.String("op", op),
+	)
+
 	grpcs := grpc.NewServer()
 
 	infopullerpb.RegisterInfoPullerServer(grpcs, &Handlers{
@@ -55,15 +62,32 @@ func New(log *slog.Logger, client *client.Client, c config.Config) *App {
 }
 
 func (a *App) Run() error {
+	const op = "infopuller.Run()"
+
+	a.Log.Debug(
+		"starting infopuller server",
+		slog.String("op", op),
+	)
+
 	l, err := net.Listen(a.Config.Network, a.Config.Address)
 	if err != nil {
+		a.Log.Debug(
+			"failed to listen",
+			slog.String("op", op),
+			slog.Any("err", err),
+		)
+
 		return err
 	}
 
-	// TODO: DEBUG LOG SERVER START
-
 	err = a.Server.Serve(l)
 	if err != nil {
+		a.Log.Debug(
+			"failed to serve",
+			slog.String("op", op),
+			slog.Any("err", err),
+		)
+
 		return err
 	}
 
@@ -71,9 +95,14 @@ func (a *App) Run() error {
 }
 
 func (a *App) Shutdown() {
-	a.Server.GracefulStop()
+	const op = "infopuller.Shutdown()"
 
-	// TODO: DEBUG LOG SERVER STOP
+	a.Log.Debug(
+		"stopping infopuller server",
+		slog.String("op", op),
+	)
+
+	a.Server.GracefulStop()
 }
 
 type Servicer interface {
@@ -89,9 +118,15 @@ type Handlers struct {
 }
 
 func (h *Handlers) Random(ctx context.Context, req *infopullerpb.RandomRequest) (*infopullerpb.RandomResponse, error) {
+	const op = "grpc.Random()"
+
 	info, err := h.Service.Random()
 	if err != nil {
-		// TODO: LOG ERROR
+		h.Log.Error(
+			"failure in random method",
+			slog.String("op", op),
+			slog.Any("err", err),
+		)
 
 		return nil, ErrInternal
 	}
