@@ -27,8 +27,6 @@ type ClientConfig struct {
 }
 
 func New() (Config, error) {
-	// TODO: DEBUG LOG CONFIG LOAD
-
 	err := godotenv.Load()
 	if err != nil {
 		return Config{}, err
